@@ -1,5 +1,3 @@
-// product/utils/validarProductos.js
-
 const { customError } = require("../../errors/customManager.error");
 const {
   validacionEstado,
@@ -56,9 +54,7 @@ const VALIDACIONES_PRODUCTO = {
   },
   image: {
     validacion: (valor) => {
-      console.log("image-valor", valor);
       const urlImagen = validacionURL(valor);
-      console.log("image-urlImagen", urlImagen);
       return urlImagen;
     },
     errorText:
@@ -66,9 +62,7 @@ const VALIDACIONES_PRODUCTO = {
   },
   state: {
     validacion: (valor) => {
-      console.log("state-valor", valor);
       const stateValue = validacionEstado(valor);
-      console.log("state-stateValue", stateValue);
       return stateValue;
     },
     errorText:
@@ -77,7 +71,6 @@ const VALIDACIONES_PRODUCTO = {
 };
 
 const validacionesProductos = (producto) => {
-  console.log("validacion", producto);
   try {
     for (let propiedad in VALIDACIONES_PRODUCTO) {
       let valor = producto[propiedad];
@@ -92,7 +85,6 @@ const validacionesProductos = (producto) => {
 
     return true;
   } catch (error) {
-    console.log("Error en la validación", error);
     throw error;
   }
 };

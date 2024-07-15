@@ -24,7 +24,7 @@ app.use("/api/cart", cartRouter);
 app.use("/api", testRouter);
 
 app.get("/", (req, res) => {
-  res.send("Respuesta desde el servidor LOGIN-BACKEND!");
+  res.send("Respuesta desde el servidor ¡INICIADO!");
 });
 
 app.listen(PORT, () => {

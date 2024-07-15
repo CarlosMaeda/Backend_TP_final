@@ -1,7 +1,3 @@
-// helpers/Validations.helpers.js
-
-const { customError } = require("../errors/customManager.error");
-
 const validacionExistencia = (valor) => {
   return Boolean(valor);
 };

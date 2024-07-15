@@ -7,19 +7,6 @@ const {
 } = require("./auth.service");
 const jwt = require("jsonwebtoken");
 
-/* 
-Datos para el endpoint register:
-{
-  Nombres: "string",
-  Apellidos: "string",
-  Email: "string",
-  Username: "string",
-  Password: "string"
-}
-{
-UUID: "string", (auto generado por el servidor)}
-
-*/
 const registerController = async (req, res) => {
   const { name, lastname, email, username, password, UUID } = req.body;
   try {
@@ -33,19 +20,9 @@ const registerController = async (req, res) => {
     });
     res.status(200).json(result);
   } catch (error) {
-    console.error("register controller", error);
     res.status(error.status).json(error);
   }
 };
-
-/* 
-Datos para el endpoint login:
-{
-  Email: "string",
-  Username: "string",
-  Password: "string"
-}
-*/
 
 const loginController = async (req, res) => {
   const { email, username, password } = req.body;
@@ -54,7 +31,6 @@ const loginController = async (req, res) => {
     const resultado = await loginService({ email, username, password });
     res.status(200).json(resultado);
   } catch (error) {
-    console.error(error);
     res.status(error.status).json(error);
   }
 };
@@ -93,7 +69,6 @@ const addressController = async (req, res) => {
     departamento,
     localidad,
     provincia,
-    pais,
     codigoPostal,
   } = req.body;
   try {
@@ -104,12 +79,10 @@ const addressController = async (req, res) => {
       departamento: departamento,
       localidad: localidad,
       provincia: provincia,
-      pais: pais,
       codigoPostal: codigoPostal,
     });
     res.status(200).json(result);
   } catch (error) {
-    console.error(error);
     res.status(error.status).json(error);
   }
 };

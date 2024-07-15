@@ -1,5 +1,3 @@
-// errors/customManager.error.js
-
 class customError {
   constructor(ok, message, status, data = null) {
     this.ok = ok;

@@ -4,15 +4,27 @@ const {
   getProductByIdController,
   putProductController,
   getAllProductsController,
+  postCategoryController,
+  getAllCategoriesController,
 } = require("./products.controller");
+const { verifyTokenMiddleware } = require("../auth/auth.middleware");
 
 const productRouter = express.Router();
 
 productRouter.get("/", getAllProductsController);
-/* agregar middleware de autorizacion y verificar que sea ADMINISTRADOR */
-productRouter.post("/", postProductController);
+
+productRouter.get("/categories", getAllCategoriesController);
+
+productRouter.post("/", verifyTokenMiddleware, postProductController);
+
+productRouter.post(
+  "/categories",
+  verifyTokenMiddleware,
+  postCategoryController
+);
+
 productRouter.get("/:pid", getProductByIdController);
-/* agregar middleware de autorizacion y verificar que sea ADMINISTRADOR */
-productRouter.put("/:pid", putProductController);
+
+productRouter.put("/:pid", verifyTokenMiddleware, putProductController);
 
 module.exports = { productRouter };

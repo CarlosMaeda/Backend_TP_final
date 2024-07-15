@@ -5,22 +5,10 @@ const insertarProducto = async (producto) => {
   console.log("insertar:", producto.name);
   const { name, description, code, price, stock, image, state, category } =
     producto;
-  console.log(
-    "insertar:",
-    name,
-    description,
-    code,
-    price,
-    stock,
-    image,
-    state,
-    category
-  );
 
   try {
-    const consultaCat = "SELECT * FROM categorias WHERE Nombre = ?";
+    const consultaCat = "SELECT * FROM categorias WHERE Categoria = ?";
     const [resultadoCat] = await pool.query(consultaCat, [category]);
-    //console.log("Categoria_ID:", resultadoCat[0].Categoria_ID);
 
     if (resultadoCat.length === 0) {
       throw new customError(false, "La categoria no existe", 404);
@@ -98,8 +86,7 @@ const seleccionarProductoPorId = async (pid) => {
 };
 
 const actualizarProducto = async (pid, producto) => {
-  const { name, description, code, price, stock, image, state, category } =
-    producto;
+  const { description, price, stock, image, state } = producto;
   try {
     const consulta =
       "UPDATE productos SET Precio =IFNULL(?, Precio), Stock =IFNULL(?, Stock), Imagen =IFNULL(?, Imagen), Estado =IFNULL(?, Estado) WHERE Producto_ID = ?";
@@ -130,9 +117,54 @@ const actualizarProducto = async (pid, producto) => {
   }
 };
 
+const buscarCategorias = async () => {
+  try {
+    const consulta = "SELECT * FROM categorias";
+    const [resultado] = await pool.query(consulta);
+
+    return resultado;
+  } catch (error) {
+    if (error.status) {
+      throw error;
+    } else {
+      throw new customError(
+        false,
+        "SQL_Error: al intentar insertar en la base de datos",
+        500
+      );
+    }
+  }
+};
+const insertarCategoria = async (categoria) => {
+  try {
+    const { category } = categoria;
+    const consultaCat = "SELECT * FROM categorias WHERE Categoria = ?";
+    const [resultadoCat] = await pool.query(consultaCat, [category]);
+
+    if (resultadoCat.length !== 0) {
+      throw new customError(false, "La categoria ya existe", 404);
+    }
+    const consulta = "INSERT INTO categorias (Categoria) VALUES (?)";
+    const [resultado] = await pool.query(consulta, [category]);
+    return resultado.insertId;
+  } catch (error) {
+    if (error.status) {
+      throw error;
+    } else {
+      throw new customError(
+        false,
+        "SQL_Error: al intentar insertar en la base de datos",
+        500
+      );
+    }
+  }
+};
+
 module.exports = {
   insertarProducto,
   seleccionarProductoPorId,
   actualizarProducto,
   seleccionarProductos,
+  insertarCategoria,
+  buscarCategorias,
 };

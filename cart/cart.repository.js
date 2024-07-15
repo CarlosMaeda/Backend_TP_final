@@ -41,13 +41,6 @@ const agregarAlCarrito = async (carrito_id, producto_id, cantidad) => {
     const precio = producto[0].Precio;
     const stock = producto[0].Stock;
 
-    /* 
-    SELECT p.Producto_ID, p.Nombre, p.Precio, p.Imagen, cp.Unidades
-    FROM productos p
-    INNER JOIN carritos_productos cp ON p.Producto_ID = cp.Producto_ID
-    WHERE cp.Carrito_ID = 1 AND cp.Producto_ID = 3;
-     */
-
     if (productos.length === 0) {
       if (stock < cantidad) {
         throw new customError(
@@ -92,10 +85,6 @@ const agregarAlCarrito = async (carrito_id, producto_id, cantidad) => {
       await pool.query(actualizarStock, [cantidad, producto_id]);
     }
   } catch (error) {
-    console.error(
-      "SQL_ERROR al agregar un producto al carrito-agregar al carrito",
-      error
-    );
     if (error.status) {
       throw error;
     } else {
@@ -133,7 +122,6 @@ const eliminarProductoDelCarrito = async (carrito_id, pid) => {
     const unidades =
       "SELECT Unidades FROM carritos_productos WHERE Carrito_ID = ? AND Producto_ID = ?";
     const [unidadesCarrito] = await pool.query(unidades, [carrito_id, pid]);
-    console.log("UnidadesCarrito: ", unidadesCarrito[0].Unidades);
     const consulta =
       "DELETE FROM carritos_productos WHERE Carrito_ID = ? AND Producto_ID = ?";
     await pool.query(consulta, [carrito_id, pid]);
@@ -163,22 +151,15 @@ const restarDelCarrito = async (carrito_id, producto_id, cantidad) => {
       carrito_id,
       producto_id,
     ]);
-    console.log("Restar del carrito-1: ", productos);
 
     const consultaProducto = "SELECT * FROM productos WHERE Producto_ID = ?";
 
     const [producto] = await pool.query(consultaProducto, [producto_id]);
-    console.log("Restar del carrito-2: ", producto);
 
     const precio = producto[0].Precio;
     const stock = producto[0].Stock;
     const unidades = productos[0].Unidades;
 
-    /* const consulta =
-      "SELECT p.*, cp.Unidades, cp.Carrito_Producto_ID FROM productos p INNER JOIN carritos_productos cp ON p.Producto_ID = cp.Producto_ID WHERE cp.Carrito_ID = ? AND cp.Producto_ID = ?";
-
-    const [carrito] = await pool.query(consulta, [carrito_id, producto_id]);
-    console.log("Restar del carrito: ", carrito); */
     if (productos.length === 0) {
       throw new customError(
         false,
@@ -198,8 +179,6 @@ const restarDelCarrito = async (carrito_id, producto_id, cantidad) => {
       ); */
     }
     if (unidades > cantidad) {
-      console.log("Se va a restar del carrito", unidades > cantidad);
-
       const actualizarProductoCarrito =
         "UPDATE carritos_productos SET Unidades = Unidades - ? WHERE Carrito_ID = ? AND Producto_ID = ?";
 

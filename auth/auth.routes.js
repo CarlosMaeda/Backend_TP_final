@@ -9,7 +9,6 @@ const { verifyTokenMiddleware } = require("./auth.middleware");
 
 const authRouter = express.Router();
 
-// localhost:4500/api/auth/endpoint(login,register,verify-token)
 authRouter.post("/register", registerController);
 
 authRouter.post("/login", loginController);

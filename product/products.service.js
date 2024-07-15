@@ -4,14 +4,29 @@ const {
   seleccionarProductoPorId,
   actualizarProducto,
   seleccionarProductos,
+  insertarCategoria,
+  buscarCategorias,
 } = require("./products.repository");
 const {
   validarPropiedadesProducto,
   validacionesActualizacion,
 } = require("./utils/validarProductos");
 
+let counter = 0;
+const designarImagen = () => {
+  if (counter < 650) {
+    counter = counter + 1;
+  } else {
+    counter = 0;
+  }
+  const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${counter}.svg`;
+  return image;
+};
 const crearProducto = async (producto) => {
   try {
+    const image = designarImagen();
+    const state = "activo";
+    producto = { ...producto, image, state };
     const paso = validarPropiedadesProducto(producto);
 
     if (paso) {
@@ -29,7 +44,6 @@ const crearProducto = async (producto) => {
       );
     }
   } catch (error) {
-    console.log(error);
     if (error.status) {
       throw error;
     } else {
@@ -67,13 +81,11 @@ const obtenerProductoPorId = async (pid) => {
   }
 };
 
-
 const actualizarProductoPorId = async (pid, producto) => {
   try {
     const paso_validacion = validacionesActualizacion(producto);
     const id_valido = await seleccionarProductoPorId(pid);
     if (paso_validacion && id_valido) {
-      console.log("-----xxxxxxxxxxxxxx Pasó por Srvice xxxxxxxxxxxxxxx-----");
       await actualizarProducto(pid, producto);
       return {
         ok: true,
@@ -96,9 +108,52 @@ const actualizarProductoPorId = async (pid, producto) => {
   }
 };
 
+const crearCategoria = async (categoria) => {
+  try {
+    const idCreado = await insertarCategoria(categoria);
+    return {
+      ok: true,
+      message: `Categoría creada con id ${idCreado}`,
+      idCreado: idCreado,
+    };
+  } catch (error) {
+    if (error.status) {
+      throw error;
+    } else {
+      throw new customError(false, "Error interno del servidor", 500);
+    }
+  }
+};
+
+const obtenerCategorias = async () => {
+  try {
+    const categorias = await buscarCategorias();
+    if (categorias.length === 0) {
+      throw new customError(false, "No hay categorias", 404);
+    }
+    return {
+      status: 200,
+      message: "Categorias obtenidas",
+      categorias: categorias,
+    };
+  } catch (error) {
+    if (error.status) {
+      throw error;
+    } else {
+      throw new customError(
+        false,
+        "SQL_Error: al intentar insertar en la base de datos",
+        500
+      );
+    }
+  }
+};
+
 module.exports = {
   crearProducto,
   obtenerProductoPorId,
   actualizarProductoPorId,
   obtenerProductos,
+  crearCategoria,
+  obtenerCategorias,
 };

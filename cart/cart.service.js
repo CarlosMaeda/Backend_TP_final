@@ -14,7 +14,6 @@ const agregarAlCarritoService = async (datos) => {
     await agregarAlCarrito(carritoId, producto_id, cantidad);
     return { status: 200, message: "Producto agregado con exito" };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -30,7 +29,6 @@ const obtenerCarritoService = async (usuario_id) => {
       carrito: carritoDetallado,
     };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -46,7 +44,6 @@ const eliminarProductoDelCarritoService = async (usuario_id, pid) => {
       carrito: carritoDetallado,
     };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -60,7 +57,6 @@ const quitarDelCarritoService = async (datos) => {
 
     await restarDelCarrito(carritoId, producto_id, cantidad);
   } catch (error) {
-    console.log("Error en el service", error);
     throw error;
   }
 };

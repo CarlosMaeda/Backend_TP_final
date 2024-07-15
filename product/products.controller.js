@@ -4,10 +4,11 @@ const {
   obtenerProductoPorId,
   actualizarProductoPorId,
   obtenerProductos,
+  crearCategoria,
+  obtenerCategorias,
 } = require("./products.service");
 
 const postProductController = async (req, res) => {
-  /* const {descripcion, titulo, precio, stock, codigo} = req.body */
   try {
     const result = await crearProducto(req.body);
     res.status(200).json(result);
@@ -43,9 +44,7 @@ const getProductByIdController = async (req, res) => {
 };
 
 const putProductController = async (req, res) => {
-  console.log("Controller-PUT", req.body);
   const pid = parseInt(req.params.pid);
-  console.log("Controller-PUT", pid);
 
   try {
     const result = await actualizarProductoPorId(pid, req.body);
@@ -55,11 +54,29 @@ const putProductController = async (req, res) => {
   }
 };
 
+const postCategoryController = async (req, res) => {
+  try {
+    const result = await crearCategoria(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(error.status).json(error);
+  }
+};
 
+const getAllCategoriesController = async (req, res) => {
+  try {
+    const result = await obtenerCategorias();
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(error.status).json(error);
+  }
+};
 
 module.exports = {
   postProductController,
   getProductByIdController,
   putProductController,
   getAllProductsController,
+  postCategoryController,
+  getAllCategoriesController,
 };

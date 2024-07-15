@@ -13,7 +13,6 @@ const buscarUsuarioPorEmail = async (email) => {
       return resultado[0];
     }
   } catch (error) {
-    console.error(error);
     throw new customError(
       false,
       "SQL_Error: al intentar buscar en la base de datos",
@@ -29,11 +28,9 @@ const buscarUsuarioPorUsername = async (username) => {
     if (resultado.length === 0) {
       return null;
     } else {
-      //console.log("Usuario encontrado", resultado[0]);
       return resultado[0];
     }
   } catch (error) {
-    console.error(error);
     throw new customError(
       false,
       "SQL_Error: al intentar buscar en la base de datos",
@@ -48,20 +45,15 @@ const verificarUuid = async (UUID) => {
     for (let i = 0; i < 3; i++) {
       const [resultado] = await pool.query(consulta, [UUID]);
       if (resultado.length === 0) {
-        console.log("UUID validado para uso");
         return true;
-      } /* if (i === 2) {
-        throw new customError(false, "Error al generar el UUID", 500);
-      } else  */ else {
-        console.log("UUID ya registrado, no validado para uso: -", i);
-        generadorUuidv4();
       }
+      if (i === 2) {
+        throw new customError(false, "Error al registrar el usuario", 500);
+      }
+      generadorUuidv4();
     }
-    /* throw new customError(false, "Error al registrar el usuario", 500); */
   } catch (error) {
-    console.error("Error en 'verificarUuid', del catch", error);
-    throw new customError(false, "Error al registrar el usuario", 500);
-    //throw error;
+    throw error;
   }
 };
 
@@ -90,13 +82,11 @@ const insertarUsuario = async (usuario) => {
     const consultaUUID = "INSERT INTO uuid_usadas (UUID) VALUES (?)";
     await pool.query(consultaUUID, [UUID]);
 
-    console.log("Rapository Usuario ID: ", resultadoUsuario.insertId);
     const resultadoRol = "INSERT INTO usuarios_roles (Usuario_ID) VALUES (?)";
     await pool.query(resultadoRol, [resultadoUsuario.insertId]);
 
     return true;
   } catch (error) {
-    console.error(error);
     throw new customError(
       false,
       "SQL_Error: al intentar insertar en la base de datos",
@@ -113,7 +103,6 @@ const obtenerCredenciales = async (Usuario_ID) => {
     const [credenciales] = await pool.query(consulta, [Usuario_ID]);
     return credenciales[0];
   } catch (error) {
-    console.error(error);
     throw new customError(
       false,
       "SQL_Error: al intentar buscar en la base de datos",
@@ -125,7 +114,6 @@ const obtenerCredenciales = async (Usuario_ID) => {
 const actualizarDireccion = async (Email, Direccion) => {
   try {
   } catch (error) {
-    console.error(error);
     throw new customError(
       false,
       "SQL_Error: al intentar buscar en la base de datos",
