@@ -26,7 +26,7 @@
 
 - [] Filtrar un producto por Codigo
 
-- [] Filtrar un producto por Categoria
+- [x] Filtrar un producto por Categoria
 
 - [x] Agregar un producto (solo si el usuario es Administrador)
 
